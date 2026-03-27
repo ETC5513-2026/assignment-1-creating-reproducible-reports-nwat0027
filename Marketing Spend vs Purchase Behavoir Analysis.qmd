@@ -1,0 +1,26 @@
+---
+title: "Marketing Spend vs. Purchase Behavior Analysis"
+author: Nattamon Wattanapenpaiboon
+format: 
+    html:
+        theme: cerulean
+    pdf: default
+ editor: visual      
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+# load raw data
+raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
+```
+
+# Introduction
+
+In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, our team executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our bottom line. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.
+
+#
