@@ -23,4 +23,6 @@ raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
 
 In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, our team executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our bottom line. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.
 
-#
+# Research Question
+
+The primary objective of this investigation is to determine whether an increase in marketing spend per customer results in a proportional rise in their total purchase amounts. Specifically, we will examine if our high-spend segments consistently outperform lower-investment groups in terms of total sales volume. This analysis will confirm whether our current personalized spending model successfully incentivizes higher consumer expenditure.
