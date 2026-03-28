@@ -1,11 +1,11 @@
 ---
-title: "Marketing Spend vs. Purchase Behavior Analysis"
-author: Nattamon Wattanapenpaiboon
+title: "Marketing Spend vs Purchase Behavior Analysis"
+author: "Nattamon Wattanapenpaiboon"
 format: 
     html:
         theme: cerulean
     pdf: default
- editor: visual      
+editor: visual      
 ---
 
 ```{r}
@@ -19,6 +19,10 @@ library(ggplot2)
 raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
 ```
 
+```{r}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 # Introduction
 
 In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, our team executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our bottom line. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.
@@ -30,22 +34,36 @@ The primary objective of this investigation is to determine whether an increase 
 ## Dataset Introduction
 
 ```{r}
+# Data cleaning
 # Clean customer_id
 marketing_data <- raw_data |> mutate(customer_id = str_remove(customer_id, "^.{9}"),
 # Clean and convert signup_date string to date format
 signup_date = parse_date_time(signup_date, orders = c("dmy", "mdy", "ymd")),
                                          signup_date = as.Date(signup_date))
-
 ```
 
-size of the dataset - number of observations, variables, variable types
+The marketing campaign dataset used in this analysis serves as the foundational record of our personalized outreach strategies across ads, emails, and coupons during the previous quarter. It tracks key individual-level metrics, including unique customer_id, their acquisition timeline (signup_date), and our specific financial investment (marketing_spend). We also measure behavioral engagement through visits and total purchase_amounts to quantify the financial return on each marketing dollar. Furthermore, the inclusion of segment and campaign notes provides critical context for distinguishing which demographics or outreach methods were most effective. Collectively, these variables allow for a granular analysis of return on investment and the optimization of future budget allocations.
 
-- The dataset shows a record of a personalized marketing campaign.
-- It tracks each customer with their sign up history, the company's marketing investment, and customer's engagement, and the final revenue. It also includes a segment variable to categorize customers.
+It consists of \`r ncol(marketing_data)\` variables as shown in the table below, and \`r nrow(marketing_data)\` observations.
 
-The marketing campaign dataset used in this analysis consists of \`r nrow(marketing_data)\` observations and \`r ncol(marketing_data)\` variables.
+```{r}
+data_dict <- tibble(
+    Variable = names(marketing_data),
+    Type = sapply(marketing_data, class)) |>
+        mutate(Description = case_when(
+            Variable == "customer_id" ~ "Unique customer identification",
+            Variable == "signup_date" ~ "Date of customer registration",
+            Variable == "marketing_spend" ~ "Total campaign expenditure per customer ($)",
+            Variable == "visits" ~ "Count of customer site visits during the campaign",
+            Variable == "purchase_amount" ~ "Total revenue generated from the customer ($)",
+            Variable == "segment" ~ "Customer segment i.e. Enterprise, SMB, Consumer",
+            Variable == "notes" ~ "Qualitative record of campaign outreach outcomes"
+        ))
 
-Create two other summaries of your data, one as a plot and one as a table. Examples include counts of certain variables in groups, or summary statistics of numeric variables. Make sure these summaries are providing a broader context to the report and are not just arbitrary commentaries
+kable(data_dict)
+```
+
+Create two other summaries of your data, one as a plot and one as a table. Examples include counts of certain variables in groups, or summary statistics of numeric variables. Make sure these summaries are providing a broader context to the report and are not just arbitrary commentaries.
 
 # Results
 
