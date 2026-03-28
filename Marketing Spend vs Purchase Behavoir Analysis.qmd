@@ -9,11 +9,11 @@ format:
 ---
 
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
+#| include: false
+# loading libraries
 library(tidyverse)
 library(knitr)
+library(lubridate)
 library(ggplot2)
 # load raw data
 raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
@@ -26,3 +26,31 @@ In the increasingly competitive online retail sector, the efficient allocation o
 # Research Question
 
 The primary objective of this investigation is to determine whether an increase in marketing spend per customer results in a proportional rise in their total purchase amounts. Specifically, we will examine if our high-spend segments consistently outperform lower-investment groups in terms of total sales volume. This analysis will confirm whether our current personalized spending model successfully incentivizes higher consumer expenditure.
+
+## Dataset Introduction
+
+```{r}
+# Clean customer_id
+marketing_data <- raw_data |> mutate(customer_id = str_remove(customer_id, "^.{9}"),
+# Clean and convert signup_date string to date format
+signup_date = parse_date_time(signup_date, orders = c("dmy", "mdy", "ymd")),
+                                         signup_date = as.Date(signup_date))
+
+```
+
+size of the dataset - number of observations, variables, variable types
+
+- The dataset shows a record of a personalized marketing campaign.
+- It tracks each customer with their sign up history, the company's marketing investment, and customer's engagement, and the final revenue. It also includes a segment variable to categorize customers.
+
+The marketing campaign dataset used in this analysis consists of \`r nrow(marketing_data)\` observations and \`r ncol(marketing_data)\` variables.
+
+Create two other summaries of your data, one as a plot and one as a table. Examples include counts of certain variables in groups, or summary statistics of numeric variables. Make sure these summaries are providing a broader context to the report and are not just arbitrary commentaries
+
+# Results
+
+- Create 2 figures maximum of your data that will help you answer your research question. Each figure must have a caption using the options inside the R code chunk. Create the figures using the `ggplot2` package.
+
+- The figures must have captions, and must be referred to in the text of the results section.
+
+As well as the figures, you must also include a paragraph describing these results and how they link back to your research question. Remember, you can use inline code to extract certain numbers automatically.
