@@ -20,7 +20,7 @@ raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
 ```
 
 ```{r}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 # Introduction
@@ -59,11 +59,58 @@ data_dict <- tibble(
             Variable == "segment" ~ "Customer segment i.e. Enterprise, SMB, Consumer",
             Variable == "notes" ~ "Qualitative record of campaign outreach outcomes"
         ))
-
-kable(data_dict)
 ```
 
-Create two other summaries of your data, one as a plot and one as a table. Examples include counts of certain variables in groups, or summary statistics of numeric variables. Make sure these summaries are providing a broader context to the report and are not just arbitrary commentaries.
+```{r}
+#| label: tbl-datadict_table
+#| tbl-cap: Data Dictionary for the Marketing Dataset
+kable(data)
+```
+
+
+```{r}
+#| label: tbl-spend_by_segment
+#| tbl-cap: "Allocation of Marketing Budget by Customer Segment"
+marketing_data |>
+group_by(segment) |>
+summarise(
+    "Customer Count" = n(),
+    "Average Marketing Spend ($)" = mean(marketing_spend, na.rm = TRUE),
+    "Average Purchase ($)" = mean(purchase_amount, na.rm = TRUE),
+    "Purchase-Spend Ratio" = (mean(purchase_amount, na.rm = TRUE) / mean(marketing_spend, na.rm = TRUE))) |>
+    mutate(across(where(is.numeric), ~ round(.x ,2)))|>
+    kable()
+```
+
+@tbl-spend_by_segment provides the strategic context of our personalized campaign, demonstrating how marketing expenditures were intentionally allocated across the Consumer, Enterprise, and SMB customer segments. This breakdown illustrates that while we maintained a consistent average investment of approximately `r round(mean(marketing_data$marketing_spend), 0)` per customer, individual spend levels still varied significantly within each category.
+
+```{r}
+#| label: fig-customer_tenure
+#| fig-cap: Customer Aquisition Timeline
+marketing_data |> 
+    filter(!is.na(signup_date)) |> 
+    ggplot(aes(x = signup_date)) +
+    geom_histogram(bins = 20, fill = "#3498db", colour = "white") +
+    theme_minimal() +
+    labs(x = "Sign-up Date", y = "Number of New Customers")
+```
+
+@fig-customer_tenure provides essential context by illustrating the customer acquisition timeline from late 2024 through early 2026. This distribution reveals that our personalized campaign reached a diverse mix of long-standing customers and newly acquired users, which is a critical factor in understanding the variance in purchase behavior analyzed in the next section.
+
+```{r}
+#| label: tbl-summary_statistics
+#| tbl-cap: "Summary Statistics for Marketing Expenditure and Customer Engagement"
+marketing_data |>
+    reframe(
+        Metric = c("Marketing Spend ($)","Purchase Amount ($)", "Site Visits"),
+        Average = c(mean(marketing_spend), mean(purchase_amount, na.rm = TRUE), mean(visits)),
+        Minimum = c(min(marketing_spend), min(purchase_amount, na.rm = TRUE), min(visits)),
+        Maximum = c(max(marketing_spend), max(purchase_amount, na.rm = TRUE), max(visits))
+    ) |> mutate(across(where(is.numeric), ~ round(.x ,2)))|>
+        kable()
+```
+
+According to the @tbl-summary_statistics, the average marketing investment per customer was $`r round(mean(marketing_data$marketing_spend), 2)`, while the average purchase generated was $`r round(mean(marketing_data$purchase_amount, na.rm = TRUE), 2)`. This indicates a significant range in campaign performance, with individual customer purchases reaching as high as $`r round(max(marketing_data$purchase_amount, na.rm = TRUE), 2)` despite an average site engagement of approximately `r round(mean(marketing_data$visits, na.rm = TRUE), 0)` visits per person.
 
 # Results
 
