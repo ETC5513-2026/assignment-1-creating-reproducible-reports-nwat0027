@@ -20,69 +20,57 @@ raw_data <- read_csv("data/36798800_Nattamon Wattanapenpaiboon.csv")
 ```
 
 ```{r}
+#| include: false
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 # Introduction
 
-In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, our team executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our bottom line. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.
+In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, the company executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our income. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.
 
 # Research Question
 
-The primary objective of this investigation is to determine whether an increase in marketing spend per customer results in a proportional rise in their total purchase amounts. Specifically, we will examine if our high-spend segments consistently outperform lower-investment groups in terms of total sales volume. This analysis will confirm whether our current personalized spending model successfully incentivizes higher consumer expenditure.
+The primary objective of this investigation is to determine if higher marketing expenditure per customer directly results in increased purchase amounts. Additionally, we will analyze whether the responsiveness to this personalized spend varies significantly across our customer segments. By establishing this link, we can evaluate the efficiency of our current model and identify which customer groups yield the highest return on investment.
 
-## Dataset Introduction
+# Dataset Introduction
+
+The dataset provides a comprehensive record of our personalized outreach strategies. It tracks individual customer acquisition timelines and our specific financial investment alongside behavioral metrics such as site visits, campaign outreach notes, and total revenue generated. The inclusion of customer segments provides the necessary context to evaluate how responsiveness to marketing investment varies across different business tiers. Collectively, these variables allow us to quantify the financial return on each marketing dollar spent and identify opportunities for budget optimization.
+
+**Data Cleaning** To make the data ready for analysis, I first cleaned the customer IDs by removing the extra prefix digits from each entry. I also unified the sign-up dates into a single, consistent format so they could be easily tracked over time. Lastly, I updated the campaign notes to ensure that any "N/A" entries were correctly recognized as missing information.
 
 ```{r}
 # Data cleaning
-# Clean customer_id
+# Remove student id from customer_id
 marketing_data <- raw_data |> mutate(customer_id = str_remove(customer_id, "^.{9}"),
-# Clean and convert signup_date string to date format
+# Convert signup_date string to date format
 signup_date = parse_date_time(signup_date, orders = c("dmy", "mdy", "ymd")),
                                          signup_date = as.Date(signup_date))
+# Remove "N/A" from notes values
+marketing_data <- marketing_data |>
+    mutate(notes = na_if(notes, "N/A"))
 ```
 
-The marketing campaign dataset used in this analysis serves as the foundational record of our personalized outreach strategies across ads, emails, and coupons during the previous quarter. It tracks key individual-level metrics, including unique customer_id, their acquisition timeline (signup_date), and our specific financial investment (marketing_spend). We also measure behavioral engagement through visits and total purchase_amounts to quantify the financial return on each marketing dollar. Furthermore, the inclusion of segment and campaign notes provides critical context for distinguishing which demographics or outreach methods were most effective. Collectively, these variables allow for a granular analysis of return on investment and the optimization of future budget allocations.
+## Dataset Description
 
-It consists of \`r ncol(marketing_data)\` variables as shown in the table below, and \`r nrow(marketing_data)\` observations.
+The marketing campaign dataset consists of `r ncol(marketing_data)` variables and `r nrow(marketing_data)` observations.
 
-```{r}
-data_dict <- tibble(
-    Variable = names(marketing_data),
-    Type = sapply(marketing_data, class)) |>
-        mutate(Description = case_when(
-            Variable == "customer_id" ~ "Unique customer identification",
-            Variable == "signup_date" ~ "Date of customer registration",
-            Variable == "marketing_spend" ~ "Total campaign expenditure per customer ($)",
-            Variable == "visits" ~ "Count of customer site visits during the campaign",
-            Variable == "purchase_amount" ~ "Total revenue generated from the customer ($)",
-            Variable == "segment" ~ "Customer segment i.e. Enterprise, SMB, Consumer",
-            Variable == "notes" ~ "Qualitative record of campaign outreach outcomes"
-        ))
-```
+xxxx can we add a data dictionary xxxxx
 
 ```{r}
-#| label: tbl-datadict_table
-#| tbl-cap: Data Dictionary for the Marketing Dataset
-kable(data)
-```
-
-
-```{r}
-#| label: tbl-spend_by_segment
-#| tbl-cap: "Allocation of Marketing Budget by Customer Segment"
+#| label: tbl-summary_by_segment
+#| tbl-cap: "Comparative Summary of Marketing Investment and Customer Engagement by Segment"
 marketing_data |>
 group_by(segment) |>
 summarise(
     "Customer Count" = n(),
-    "Average Marketing Spend ($)" = mean(marketing_spend, na.rm = TRUE),
-    "Average Purchase ($)" = mean(purchase_amount, na.rm = TRUE),
-    "Purchase-Spend Ratio" = (mean(purchase_amount, na.rm = TRUE) / mean(marketing_spend, na.rm = TRUE))) |>
+    "Avg. Marketing Spend (\\$)" = mean(marketing_spend, na.rm = TRUE),
+    "Avg. Purchase (\\$)" = mean(purchase_amount, na.rm = TRUE),
+    "Avg. Visits" = mean(visits)) |>
     mutate(across(where(is.numeric), ~ round(.x ,2)))|>
     kable()
 ```
 
-@tbl-spend_by_segment provides the strategic context of our personalized campaign, demonstrating how marketing expenditures were intentionally allocated across the Consumer, Enterprise, and SMB customer segments. This breakdown illustrates that while we maintained a consistent average investment of approximately `r round(mean(marketing_data$marketing_spend), 0)` per customer, individual spend levels still varied significantly within each category.
+@tbl-summary_by_segment illustrates the strategic distribution of our campaign across the three primary business tiers. The Consumer segment represents our most extensive target audience and received the highest level of average investment per customer. Interestingly, while the Enterprise segment demonstrated the strongest brand engagement through site visits, it produced the lowest average revenue conversion. In contrast, the SMB segment showed notable baseline efficiency, maintaining high relative purchase amounts despite receiving the most conservative marketing expenditure. This variation in engagement and conversion across segments provides the essential context for analyzing the correlation between spend and revenue in the following results.
 
 ```{r}
 #| label: fig-customer_tenure
@@ -95,27 +83,39 @@ marketing_data |>
     labs(x = "Sign-up Date", y = "Number of New Customers")
 ```
 
-@fig-customer_tenure provides essential context by illustrating the customer acquisition timeline from late 2024 through early 2026. This distribution reveals that our personalized campaign reached a diverse mix of long-standing customers and newly acquired users, which is a critical factor in understanding the variance in purchase behavior analyzed in the next section.
-
-```{r}
-#| label: tbl-summary_statistics
-#| tbl-cap: "Summary Statistics for Marketing Expenditure and Customer Engagement"
-marketing_data |>
-    reframe(
-        Metric = c("Marketing Spend ($)","Purchase Amount ($)", "Site Visits"),
-        Average = c(mean(marketing_spend), mean(purchase_amount, na.rm = TRUE), mean(visits)),
-        Minimum = c(min(marketing_spend), min(purchase_amount, na.rm = TRUE), min(visits)),
-        Maximum = c(max(marketing_spend), max(purchase_amount, na.rm = TRUE), max(visits))
-    ) |> mutate(across(where(is.numeric), ~ round(.x ,2)))|>
-        kable()
-```
-
-According to the @tbl-summary_statistics, the average marketing investment per customer was $`r round(mean(marketing_data$marketing_spend), 2)`, while the average purchase generated was $`r round(mean(marketing_data$purchase_amount, na.rm = TRUE), 2)`. This indicates a significant range in campaign performance, with individual customer purchases reaching as high as $`r round(max(marketing_data$purchase_amount, na.rm = TRUE), 2)` despite an average site engagement of approximately `r round(mean(marketing_data$visits, na.rm = TRUE), 0)` visits per person.
+@fig-customer_tenure illustrates the acquisition timeline of our customers, providing essential context on the maturity of our target audience. This distribution shows that our campaign reached both long-standing loyalists and recently acquired users, which is important because a customer's tenure often influences how they respond to personalized marketing spend.
 
 # Results
 
-- Create 2 figures maximum of your data that will help you answer your research question. Each figure must have a caption using the options inside the R code chunk. Create the figures using the `ggplot2` package.
+```{r}
+#| label: fig-correlation
+#| fig-cap: Relationship Between Marketing Spend and Purchase Amount by Segment
 
-- The figures must have captions, and must be referred to in the text of the results section.
+ggplot(marketing_data, aes(x = marketing_spend, y = purchase_amount, colour = segment)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se= FALSE, colour = "black") +
+  theme_minimal() +
+  labs(
+    x = "Marketing Spend ($)",
+    y = "Purchase Amount ($)"
+  )
+```
 
-As well as the figures, you must also include a paragraph describing these results and how they link back to your research question. Remember, you can use inline code to extract certain numbers automatically.
+```{r}
+#| label: fig-efficiency
+#| fig-cap: Analysis of Purchase-to-Spend Efficiency Across Marketing Segments
+
+purchase_spend_ratio <- marketing_data$purchase_amount / marketing_data$marketing_spend
+
+ggplot(marketing_data, aes(x = segment, y = purchase_spend_ratio, fill = segment)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 8)) +
+  geom_hline(yintercept = 1.0, linetype = "dashed", colour = "red") +
+  theme_minimal() +
+  labs(
+    x = "Customer Segment",
+    y = "Purchase to Spend Ratio"
+  )
+```
+
+Analysis of @fig-correlation reveals a clear positive relationship between the company's marketing expenditure and customer purchase behavior with a calculated correlation of `r round(cor(marketing_data$marketing_spend, marketing_data$purchase_amount, use = "complete.obs"), 2)`. This confirms that our strategy of increasing spend successfully drives higher sales volumes across the board. Notably, because our customer base includes a wide range of signup dates, these results confirm that our personalized marketing strategy is effective for both long-term loyalists and newly acquired customers alike. However, @fig-efficiency reveals a critical strategic challenge: despite this positive correlation, the median efficiency across all segments remains below the 1.0 break-even threshold (shown by the red dashed line). This indicates that while we are successfully "moving the needle" on revenue, the cost of acquisition for the typical customer currently outweighs the immediate financial return. The data further reveals that this "spend-to-purchase" relationship is highly segment-dependent. The Enterprise segment is the most predictable but least reactive, with a tight grouping of data points sitting furthest below the profitability line, suggesting that simply increasing spend in this tier may not be financially worth the investment under the current model. In contrast, the SMB segment displays the greatest variability and remains the closest to the break-even median, representing our most viable path toward a self-sustaining return on investment ratio. Finally, the Consumer segment is uniquely characterized by extreme high-value outliers; while the "average" consumer remains below the break-even point, these superstar performers suggest that our personalized spend has the highest potential for explosive, multi-fold returns within the retail space. Collectively, these findings suggest that while our current campaign is effective at generating higher purchase amounts, it requires significant optimization for profitability.
