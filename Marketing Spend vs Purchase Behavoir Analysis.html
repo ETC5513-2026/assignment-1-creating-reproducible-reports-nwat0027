@@ -76,73 +76,20 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, the company executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our bottom line. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.</p>
+<p>In the increasingly competitive online retail sector, the efficient allocation of marketing budgets is paramount to sustainable growth. During the last fiscal quarter, the company executed a personalized campaign where expenditures on advertisements, emails, and coupons were varied at the individual customer level. This report analyzes the resulting performance data to evaluate the direct impact of these targeted investments on our income. By establishing the link between expenditure and revenue, we can more effectively refine our customer segmentation strategies for future promotional cycles.</p>
 </section>
 <section id="research-question" class="level1">
 <h1>Research Question</h1>
-<p>The primary objective of this investigation is to determine whether an increase in marketing spend per customer results in a proportional rise in their total purchase amounts. Specifically, we will examine if the company’s high-spend segments consistently outperform lower-investment groups in terms of total sales volume. This analysis will confirm whether our current personalized spending model successfully incentivizes higher consumer expenditure.</p>
-<section id="dataset-introduction" class="level2">
-<h2 class="anchored" data-anchor-id="dataset-introduction">Dataset Introduction</h2>
-<p>The marketing campaign dataset consists of 7 variables and 150 observations. The dataset is used in this analysis to serve as the foundational record of our personalized outreach strategies across ads, emails, and coupons during the previous quarter. It tracks key individual-level metrics, including unique customer_id, their acquisition timeline (signup_date), and our specific financial investment (marketing_spend). We also measure behavioral engagement through visits and total purchase_amounts to quantify the financial return on each marketing dollar. Furthermore, the inclusion of segment and campaign notes provides critical context for distinguishing which demographics or outreach methods were most effective. Collectively, these variables allow for a granular analysis of return on investment and the optimization of future budget allocations.</p>
-<div class="cell">
-<div id="tbl-summary_by_segment" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary_by_segment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Comparative Summary of Marketing Investment and Customer Engagement by Segment
-</figcaption>
-<div aria-describedby="tbl-summary_by_segment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 13%">
-<col style="width: 23%">
-<col style="width: 17%">
-<col style="width: 23%">
-<col style="width: 11%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">segment</th>
-<th style="text-align: right;">Customer Count</th>
-<th style="text-align: right;">Avg. Marketing Spend ($)</th>
-<th style="text-align: right;">Avg. Purchase ($)</th>
-<th style="text-align: right;">Avg. Purchase-Spend Ratio</th>
-<th style="text-align: right;">Avg. Visits</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Consumer</td>
-<td style="text-align: right;">89</td>
-<td style="text-align: right;">158.73</td>
-<td style="text-align: right;">104.72</td>
-<td style="text-align: right;">0.66</td>
-<td style="text-align: right;">5.22</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Enterprise</td>
-<td style="text-align: right;">17</td>
-<td style="text-align: right;">155.20</td>
-<td style="text-align: right;">94.80</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">5.94</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SMB</td>
-<td style="text-align: right;">44</td>
-<td style="text-align: right;">146.80</td>
-<td style="text-align: right;">103.60</td>
-<td style="text-align: right;">0.71</td>
-<td style="text-align: right;">5.64</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
+<p>The primary objective of this investigation is to determine if higher marketing expenditure per customer directly results in increased purchase amounts. Additionally, we will analyze whether the responsiveness to this personalized spend varies significantly across our customer segments. By establishing this link, we can evaluate the efficiency of our current model and identify which customer groups yield the highest return on investment.</p>
+</section>
+<section id="dataset-introduction" class="level1">
+<h1>Dataset Introduction</h1>
+<p>The dataset provides a comprehensive record of our personalized outreach strategies. It tracks individual customer acquisition timelines and our specific financial investment alongside behavioral metrics such as site visits, campaign outreach notes, and total revenue generated. The inclusion of customer segments provides the necessary context to evaluate how responsiveness to marketing investment varies across different business tiers. Collectively, these variables allow us to quantify the financial return on each marketing dollar spent and identify opportunities for budget optimization.</p>
+<p><strong>Data Cleaning</strong><br>
+To make the data ready for analysis, I first cleaned the customer IDs by removing the extra prefix digits from each entry. I also unified the sign-up dates into a single, consistent format so they could be easily tracked over time. I also replaced missing values with $0.00 for purchase amount to show that the customers have not made any purchases. Lastly, I updated the campaign notes to ensure that any “N/A” entries were correctly recognized as missing information.</p>
+<section id="dataset-description" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-description">Dataset Description</h2>
+<p>The marketing campaign dataset consists of 7 variables and 150 observations. The variables capture customer identity, engagement, and financial performance. Customer identifiers and categorical fields, such as business segment and campaign notes, are stored as character variables. The sign-up date is recorded as a Date object to reflect the timing of customer acquisition. The dataset also includes quantitative metrics, with numeric variables for marketing spend and purchase amount, along with a count of site visits to measure individual engagement.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-customer_tenure" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -157,16 +104,73 @@ Figure&nbsp;1: Customer Aquisition Timeline
 </div>
 </div>
 </div>
+<p><a href="#fig-customer_tenure" class="quarto-xref">Figure&nbsp;1</a> illustrates the acquisition timeline of our customers, providing essential context on the maturity of our target audience. This distribution shows that our campaign reached both long-standing loyalists and recently acquired users, which is important because a customer’s tenure often influences how they respond to personalized marketing spend.</p>
+<div class="cell">
+<div id="tbl-summary_by_segment" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary_by_segment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Comparative Summary of Marketing Investment and Customer Engagement by Segment
+</figcaption>
+<div aria-describedby="tbl-summary_by_segment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 31%">
+<col style="width: 22%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">segment</th>
+<th style="text-align: right;">Customer Count</th>
+<th style="text-align: right;">Avg. Marketing Spend ($)</th>
+<th style="text-align: right;">Avg. Purchase ($)</th>
+<th style="text-align: right;">Avg. Visits</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Consumer</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">158.73</td>
+<td style="text-align: right;">91.78</td>
+<td style="text-align: right;">5.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Enterprise</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">155.20</td>
+<td style="text-align: right;">94.80</td>
+<td style="text-align: right;">5.94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SMB</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">146.80</td>
+<td style="text-align: right;">87.12</td>
+<td style="text-align: right;">5.64</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-summary_by_segment" class="quarto-xref">Table&nbsp;1</a> outlines the strategic allocation of our campaign resources across three distinct business channels. The Consumer segment constitutes the majority of our targeted base and received the highest average financial investment per customer. However, the Enterprise tier, despite being our smallest group, demonstrated the highest levels of brand engagement through site visits and generated the strongest average revenue conversion. Meanwhile, the SMB segment represents a more conservative investment tier, resulting in the lowest relative revenue returns compared to the other groups. This variation in how different business tiers respond to our marketing expenditure provides essential baseline context for evaluating the campaign’s overall performance. Nevertheless, these average figures only tell a partial story, as they are susceptible to being skewed by individual high-value outliers. Consequently, while Table 2 offers a helpful overview of the dataset’s scale and diversity, a deeper analysis of the distribution and individual customer responsiveness is required in the following results to reach a more robust conclusion regarding the campaign’s true efficiency.</p>
 </section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
+<p>Analysis of <a href="#fig-correlation" class="quarto-xref">Figure&nbsp;2</a> reveals a clear positive relationship between the company’s marketing expenditure and customer purchase behavior with a calculated correlation of 0.56. This confirms that our strategy of increasing spend successfully drives higher sales volumes across the board. Notably, because our customer base includes a wide range of signup dates, these results confirm that our personalized marketing strategy is effective for both long-term loyalists and newly acquired customers alike. However, <a href="#fig-efficiency" class="quarto-xref">Figure&nbsp;3</a> reveals a critical strategic challenge: despite this positive correlation, the median efficiency across all segments remains below the 1.0 break-even threshold (shown by the red dashed line). This indicates that while we are successfully “moving the needle” on revenue, the cost of acquisition for the typical customer currently outweighs the immediate financial return. The data further reveals that this “spend-to-purchase” relationship is highly segment-dependent. The Enterprise segment is the most predictable but least reactive, with a tight grouping of data points sitting furthest below the profitability line, suggesting that simply increasing spend in this tier may not be financially worth the investment under the current model. In contrast, the SMB and Consumer segment display greater variability and remain closer to the break-even median, representing our most viable path toward a self-sustaining return on investment ratio. Ultimately, Consumer segment is uniquely characterized by extreme high-value outliers; while the “average” consumer remains below the break-even point, these superstar performers suggest that our personalized spend has the highest potential for explosive, multi-fold returns within the retail space. Collectively, these findings suggest that while our current campaign is effective at generating higher purchase amounts, it requires significant optimization for profitability.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-correlation" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-correlation" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Marketing-Spend-vs-Purchase-Behavoir-Analysis_files/figure-html/fig-correlation-1.png" class="img-fluid figure-img" width="672">
+<img src="Marketing-Spend-vs-Purchase-Behavoir-Analysis_files/figure-html/fig-correlation-1.png" class="img-fluid figure-img" data-fig-pos="H" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-correlation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Relationship Between Marketing Spend and Purchase Amount by Segment
@@ -177,10 +181,10 @@ Figure&nbsp;2: Relationship Between Marketing Spend and Purchase Amount by Segme
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-efficiency" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-efficiency" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-efficiency-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Marketing-Spend-vs-Purchase-Behavoir-Analysis_files/figure-html/fig-efficiency-1.png" class="img-fluid figure-img" width="672">
+<img src="Marketing-Spend-vs-Purchase-Behavoir-Analysis_files/figure-html/fig-efficiency-1.png" class="img-fluid figure-img" data-fig-pos="H" width="576">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-efficiency-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Analysis of Purchase-to-Spend Efficiency Across Marketing Segments
@@ -189,7 +193,6 @@ Figure&nbsp;3: Analysis of Purchase-to-Spend Efficiency Across Marketing Segment
 </div>
 </div>
 </div>
-<p>Analysis of <a href="#fig-correlation" class="quarto-xref">Figure&nbsp;2</a> reveals a clear positive relationship between the company’s marketing expenditure and customer purchase behavior with a calculated correlation of 0.69. This confirms that our strategy of increasing spend successfully drives higher sales volumes across the board. However, <a href="#fig-efficiency" class="quarto-xref">Figure&nbsp;3</a> reveals a critical strategic challenge: despite this positive correlation, the median efficiency across all segments remains below the 1.0 break-even threshold (shown by the red dashed line). This indicates that while we are successfully “moving the needle” on revenue, the cost of acquisition for the typical customer currently outweighs the immediate financial return. The data further reveals that this “spend-to-purchase” relationship is highly segment-dependent. The Enterprise segment is the most predictable but least reactive, with a tight grouping of data points sitting furthest below the profitability line, suggesting that simply increasing spend in this tier may not be financially worth the investment under the current model. In contrast, the SMB segment displays the greatest variability and remains the closest to the break-even median, representing our most viable path toward a self-sustaining return on investment ratio. Finally, the Consumer segment is uniquely characterized by extreme high-value outliers; while the “average” consumer remains below the break-even point, these superstar performers suggest that our personalized spend has the highest potential for explosive, multi-fold returns within the retail space. Collectively, these findings suggest that while our current campaign is effective at generating volume, it requires significant optimization.</p>
 </section>
 
 </main>
