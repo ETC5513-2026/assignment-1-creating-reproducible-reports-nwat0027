@@ -1,0 +1,18 @@
+---
+title: "appendix"
+format: html
+editor: visual
+---
+
+## AI Acknowledgement
+
+I used AI as a technical support and communication tool while completing this assignment.
+
+Specifically, I used AI to:
+
+-   Explain R error messages: AI was used to diagnose specific errors encountered during the data filtering process, providing explanations that I then used to correct my code.
+-   Refine written conclusions: I used AI to help rephrase my conclusions drawn from the data analysis to ensure they were communicated in a professional and clear manner suitable for an academic report.
+
+While AI assisted with these technical and linguistic elements, I made all analytical decisions. I have reviewed and tested all code to ensure its accuracy and take full responsibility for the final submission.
+
+Link to prompts: <https://chatgpt.com/share/69c90df1-1cb0-8323-b4d8-5aa77df2701e>
